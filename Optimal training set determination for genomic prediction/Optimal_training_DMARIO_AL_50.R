@@ -55,27 +55,6 @@ for (Env_Name in unique(Pheno$Loc)) {
     ################ MODELO BASE (aleatorio) ################
     ETA <- list(Line = list(model = 'RKHS', K = GRM_env))
     
-    pos_trn <- sample(Candidates, Sample_Size)
-    
-    y_f <- Y
-    y_f[-pos_trn] <- NA
-    
-    model_f <- BGLR::BGLR(
-      y = y_f,
-      ETA = ETA,
-      response_type = "gaussian",
-      nIter = 3000,
-      burnIn = 2000,
-      verbose = FALSE
-    )
-    
-    Observed <- Y[-pos_trn]
-    Predicted <- model_f$yHat[-pos_trn]
-    
-    COR_Conv <- cor(Observed, Predicted, use = "complete.obs")
-    MSE_Conv <- mse(Observed, Predicted)
-    NRMSE_Conv <- nrmse(Observed, Predicted, type = "mean")
-    
     ################ rScore ################
     OT_RScore <- optTrain(
       geno = Geno_env,
@@ -172,26 +151,58 @@ for (Env_Name in unique(Pheno$Loc)) {
     MSE_CD <- mse(Observed4, Predicted4)
     NRMSE_CD <- nrmse(Observed4, Predicted4, type = "mean")
     
+    ####REP
+    for (r in 1:10) {
+      set.seed(r)
+      
+      pos_trn <- sample(Candidates, Sample_Size)
+      
+      y_f <- Y
+      y_f[-pos_trn] <- NA
+      
+      model_f <- BGLR::BGLR(
+        y = y_f,
+        ETA = ETA,
+        response_type = "gaussian",
+        nIter = 3000,
+        burnIn = 2000,
+        verbose = FALSE
+      )
+      
+      Observed <- Y[-pos_trn]
+      Predicted <- model_f$yHat[-pos_trn]
+      
+      COR_Conv <- cor(Observed, Predicted, use = "complete.obs")
+      MSE_Conv <- mse(Observed, Predicted)
+      NRMSE_Conv <- nrmse(Observed, Predicted, type = "mean")
+      
     
     ################ GUARDAR RESULTADOS ################
-    Results <- rbind(Results, data.frame(
-      Dataset = dataset,
-      Environment = Env_Name,
-      Trait = Trait_name,
-      COR_Conv = COR_Conv,
-      COR_RScore = COR_RScore,
-      COR_PEV = COR_PEV,
-      COR_CD = COR_CD,
-      MSE_Conv = MSE_Conv,
-      MSE_RScore = MSE_RScore,
-      MSE_PEV = MSE_PEV,
-      MSE_CD = MSE_CD,
-      NRMSE_Conv = NRMSE_Conv,
-      NRMSE_RScore = NRMSE_RScore,
-      NRMSE_PEV = NRMSE_PEV,
-      NRMSE_CD = NRMSE_CD,
-      Sample_Size = Sample_Size
-    ))
+      Results <- rbind(Results, data.frame(
+        Dataset = dataset,
+        Environment = Env_Name,
+        Trait = Trait_name,
+        Rep = r,
+        Sample_Size = Sample_Size,
+        
+  
+        COR_Conv = COR_Conv,
+        MSE_Conv = MSE_Conv,
+        NRMSE_Conv = NRMSE_Conv,
+        
+
+        COR_RScore = COR_RScore,
+        COR_PEV = COR_PEV,
+        COR_CD = COR_CD,
+        MSE_RScore = MSE_RScore,
+        MSE_PEV = MSE_PEV,
+        MSE_CD = MSE_CD,
+        NRMSE_RScore = NRMSE_RScore,
+        NRMSE_PEV = NRMSE_PEV,
+        NRMSE_CD = NRMSE_CD
+      ))
+      
+    }
     
     print(paste("Done:", Env_Name, "-", Trait_name))
   }
