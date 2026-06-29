@@ -1,0 +1,28 @@
+################################### ARCHIVOS ########################################
++confusion_matrix.py: Dibuja las gráficas de confusión que pueden ser accedidas
+desde la respectiva carpeta de cada experimento.
++data.py: Modifica las imágenes originales en cierta medida para aumentar la 
+cantidad de datos que entra al modelo e impedir overfitting.
++INFO.txt: Brinda información relevante del contenido del repositorio.
++LICENSE: Este repositorio hace uso de la licencia GNU GPLv3.
++model.py: Obtiene el modelo seleccionado directamente de internet, haciendo más 
+fácil su adaptación y uso.
++prepare_data.py: Particiona los datos en base a lo especificado en settings.py,
+y a su vez, crea las carpetas pertinentes en /data.
++README.md: Información del repositorio original.
++requirements.txt: Contiene las versiones utilizadas para hacer funcionar el 
+repositorio correctamente.
++settings.py: Permite manipular los hiperparámetros del modelo, seleccionar el
+modelo que más se adecúe al experimento y seleccionar el dataset pertinente.
++test.py: Pone a prueba un modelo ya entrenado con imágenes no pertenecientes
+al dataset.
++train.py: Entrena al modelo usando los hiperparámetros especificados en settings.py
+
+
+################################### CARPETAS ########################################
+/data: Es creada automáticamente al momento de usar el archivo prepare_data.py, 
+contiene las particiones para train, val y test. 
+/dataset: Contiene el raw dataset, en caso de querer implementar otro dataset este 
+debe de ser introducido en esta carpeta.
+/tmp: Aquí es donde los resultados de cada uno de los experimentos son guardados, el 
+nombre de cada una de las carpetas intrínsecas apuntan a la partición usada en los mismos.
